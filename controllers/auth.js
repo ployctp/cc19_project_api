@@ -25,7 +25,9 @@ exports.register = async(req,res)=>{
         }
     })
     if(user){
-        return res.status(400).json({message:"Email already exits!"})
+       
+        return res.status(400).json({message:"Email already exists!"})
+       
     }
     //HashPassword
     const hashpassword = await bcrypt.hash(password, 10);
@@ -92,7 +94,16 @@ exports.login = async(req,res)=>{
  exports.currentUser = async(req,res)=>{
     try{
         //code
-        res.send('hello current user')
+        const user = await prisma.user.findFirst({
+            where:{ email:req.user.email },
+            select:{
+                id:true,
+                email: true,
+                name: true,
+                role: true
+            }
+        })
+        res.send(user)
     }catch(err){
         console.log(err)
         res.status(500).json({message:"Sever Error"})

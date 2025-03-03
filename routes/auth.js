@@ -3,10 +3,12 @@ const router = express.Router()
 
 const{ register,login, currentUser } = require('../controllers/auth')
 
-router.get('/register', register )
+const{authCheck, adminCheck} =require('../middlewares/authCheck')
+
+router.post('/register', register )
 router.post('/login',login)
-router.post('/current-user',currentUser)
-router.post('/current-admin',currentUser)
+router.post('/current-user',authCheck,currentUser)
+router.post('/current-admin',authCheck,adminCheck,currentUser)
 
 
 // router.post('/register', register)

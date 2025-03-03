@@ -2,6 +2,7 @@
 const express = require('express')
 const app = express ()
 const morgan = require('morgan')
+const cors = require("cors");
 
 
 const authRouter = require ('./routes/auth')
@@ -12,6 +13,7 @@ const adminRouter = require('./routes/admin')
 
 app.use(morgan('dev'))
 app.use(express.json())
+app.use(cors());
 
 app.use('/api',authRouter)
 app.use('/api',categoryRouter)
