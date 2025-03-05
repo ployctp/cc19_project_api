@@ -262,7 +262,13 @@ exports.createImages = async (req, res) => {
 
 exports.removeImages =async (req, res)=>{
     try{
-        res.send('Hello Create removeImages')
+        const {public_id} =  req.body
+        // console.log(public_id)
+        cloudinary.uploader.destroy(public_id,(result)=>
+        {
+            res.send('Remove success')
+        }) 
+        
     }catch(err){
         console.log(err)
         res.status(500).json({message: "Sever Error"})
