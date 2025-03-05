@@ -94,12 +94,13 @@ model ProductOncart {
 }
 
 model Image {
-  id        Int      @id @default(autoincrement())
-  asset_id  String
-  public_id String
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
+  id         Int      @id @default(autoincrement())
+  asset_id   String
+  public_id  String
+  url        String
+  secure_url String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  Int
 }

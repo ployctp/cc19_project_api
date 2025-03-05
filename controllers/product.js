@@ -1,39 +1,34 @@
 const prisma = require("../config/prisma")
-
-exports.create = async(req,res)=>{
-    try{
-        const {title,description,price,quantity,categoryId, images} = req.body
-        // console.log(title,description,price,quantity,images)
+// import { v2 as cloudinary } from 'cloudinary';
+const cloudinary = require('cloudinary').v2;
+exports.create = async (req, res) => {
+    try {
+        // code
+        const { title, description, price, quantity, categoryId, images } = req.body
+        // console.log(title, description, price, quantity, images)
         const product = await prisma.product.create({
-            data:{
+            data: {
                 title: title,
                 description: description,
                 price: parseFloat(price),
                 quantity: parseInt(quantity),
-                categoryId: parseInt(categoryId),
+                categoryId: categoryId ? parseInt(categoryId) : null,
                 images: {
-                    create: images.map((item)=> ({
+                    create: images.map((item) => ({
                         asset_id: item.asset_id,
-                        public_id : item.public_id,
-                        url : item.url,
-                        secure_url : item.secure_url 
+                        public_id: item.public_id,
+                        url: item.url,
+                        secure_url: item.secure_url
                     }))
                 }
-
-
             }
         })
-
-
-       res.send(product)
-
-        
-    }catch(err){
+        res.send(product)
+    } catch (err) {
         console.log(err)
-        res.status(500).json({message : "server error"})
+        res.status(500).json({ message: "Server error" })
     }
 }
-
 
 exports.list = async(req,res)=>{
     try{
@@ -245,4 +240,31 @@ exports.searchFilter = async(req,res)=>{
     }
 }
 
+cloudinary.config({ 
+    
+    cloud_name: process.env.CLOUDINARY_NAME, 
+    api_key: process.env.CLOUDINARY_API_KEY, 
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+})
+exports.createImages = async (req, res) => {
+    try {
+        const result = await cloudinary.uploader.upload(req.body.image, {
+            public_id: `ecom-${Date.now()}`,
+            resource_type: 'auto',
+            folder: 'Ecom2024',
+        });
+        res.send(result);
+    } catch (err) {
+        console.error("Error uploading to Cloudinary:", err); 
+        res.status(500).json({ message: "Server Error", error: err.message });
+    }
+};
 
+exports.removeImages =async (req, res)=>{
+    try{
+        res.send('Hello Create removeImages')
+    }catch(err){
+        console.log(err)
+        res.status(500).json({message: "Sever Error"})
+    }
+}

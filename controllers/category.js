@@ -28,7 +28,7 @@ exports.list = async(req,res)=>{
 }
 exports.remove = async(req,res)=>{
     try{
-        const{ id } = req.params
+        const { id } = req.params;
         const category = await prisma.category.delete({
             where:{
                 id: Number(id)
